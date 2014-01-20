@@ -30,7 +30,7 @@ Wordpress（WP）間の更新情報を共有する仕組み
 - Wordpressサイトを登録／管理出来るUIが必要
 - 管理する情報は、「ID」「サイト名」「URL」「APIKey」「E-Mail」（要検討）
 
-===
+---
 
 #### 2. Wordpressプラグイン
 

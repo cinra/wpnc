@@ -27,9 +27,7 @@ class ApiNotificationsController extends ApiController
    */
   public function index()
   {
-    // $conditions = array('limit'=>10);
-    // $this->ApiNotification->recursive = 0;
-    // $this->set('notifications', $this->ApiNotification->find('all'),$conditions);
+    
     if (!isset($this->api_website_id))
     {
       $result = array();
@@ -39,11 +37,21 @@ class ApiNotificationsController extends ApiController
       $website_id = $this->api_website_id;
 
       $options = array('conditions' => array(
-        'notifications.website_id =' => $website_id
+        'notifications.website_id =' => $website_id,
+        'notifications.notification_status' => array('NEW', 'UPDATE'),
       ));
       $result = $this->ApiNotification->find('all', $options);
     }
-
+    
+    if ($result)
+    {
+      foreach ($result as $v)
+      {
+        $v['notifications']['notification_status'] = 'RECEIVED';
+        $this->ApiNotification->save( $v['notifications'] );
+      }
+    }
+    
     $this->set('result', $result);
     $this->set('_serialize', array('result'));
     
@@ -58,14 +66,17 @@ class ApiNotificationsController extends ApiController
  */
   public function view($id = null)
   {
+    
     if (!$this->ApiNotification->exists($id))
     {
       $this->error('RECORD NOT FOUND', 404);
       return;
     }
+    
     $options = array('conditions' => array('notifications.' . $this->ApiNotification->primaryKey => $id));
     $this->set('result', $this->ApiNotification->find('first', $options));
     $this->set('_serialize', array('result'));
+    
   }
 
 /**
@@ -75,35 +86,26 @@ class ApiNotificationsController extends ApiController
  */
   public function add()
   {
-    // Configure::write('debug', 2);
-    //
-
-    if (!isset($this->api_website_id))
-    {
-      return;
-    }
-    $website_from_id = $this->api_website_id; // TODO: get website_id by APIKey
     
-    // find by website_id, post_id
-
-    // error_log(print_r($this->request, true));
+    if (!isset($this->api_website_id)) return;
+    
     if ($this->request->is('post'))
     {
       $data = $this->request->input('json_decode', true);
-
-      // error_log(print_r($data,true));
+      
+      $data['org_website_id'] = $this->api_website_id;
+      
       if (!isset($data['wp_postid']))
       {
-        $this->error('NO VAILD DATA', 500);
+        $this->error('NO VALID DATA', 500);
         return;
       }
 
-      #$data['website_id'] = $website_id;
-
       $apiNotification = $this->ApiNotification->find('first', array(
         'conditions' => array(
-          'notifications.website_id' => $website_id,
+          'notifications.website_id' => $data['website_id'],
           'notifications.wp_postid' => $data['wp_postid'],
+          'notifications.org_website_id' => $data['org_website_id'],
         )
       ));
       error_log(print_r($apiNotification, true));
@@ -113,7 +115,7 @@ class ApiNotificationsController extends ApiController
         $this->ApiNotification->create();
         if ($this->ApiNotification->save($data))
         {
-          CakeLog::write('debug', 'ADD OK. website_id: '.$website_id);
+          CakeLog::write('debug', 'ADD OK. website_id: '.$data['website_id']);
           $this->success(array('status' => 'OK'));
         }
         else
@@ -144,27 +146,37 @@ class ApiNotificationsController extends ApiController
  */
   public function edit($id = null)
   {
-    $website_id = 1; // TODO: get website_id by APIKey
-
-    if (!$this->ApiNotification->exists($id)) {
+    
+    if (!$this->ApiNotification->exists($id))
+    {
       $this->error('RECORD NOT FOUND', 404);
       return;
     }
-    if ($this->request->is(array('post', 'put'))) {
+    
+    if ($this->request->is(array('post', 'put')))
+    {
+      
       $data = $this->request->input('json_decode', true);
       $data['id'] = $id;
-      $data['website_id'] = $website_id;
+      $data['notification_status'] = 'UPDATE';
+      $data['org_website_id'] = $this->api_website_id;
 
-      if ($this->ApiNotification->save($data)) {
+      if ($this->ApiNotification->save($data))
+      {
         $this->success(array('status' => 'UPDATE OK'));
-      } else {
+      }
+      else
+      {
         $this->error('UPDATE FAILED', 500);
       }
-    } else {
+    }
+    else
+    {
       $this->error('BAD METHOD', 400);
     }
 
-    return ;
+    return;
+    
   }
 
 /**

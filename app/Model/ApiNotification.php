@@ -59,7 +59,7 @@ class ApiNotification extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'wp_post_content' => array(
+		/*'wp_post_content' => array(
 			'notEmpty' => array(
 				'rule' => array('notEmpty'),
 				//'message' => 'Your custom message here',
@@ -68,7 +68,7 @@ class ApiNotification extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
+		),*/
 		'post_date' => array(
 			'datetime' => array(
 				'rule' => array('datetime'),

@@ -125,6 +125,13 @@ class Notification extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Org_Website' => array(
+			'className' => 'Website',
+			'foreignKey' => 'org_website_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 }

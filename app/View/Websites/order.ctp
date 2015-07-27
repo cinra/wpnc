@@ -39,6 +39,6 @@ $(function() {
     cursor: move;
 }
 .sortable li:hover {
-    background-color: #ddd;
+    background-color: #f9f9f9;
 }
 </style>

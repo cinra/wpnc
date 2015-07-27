@@ -1,6 +1,7 @@
 <?php
 
 App::uses('ApiController', 'Controller');
+App::uses( 'CakeEmail', 'Network/Email');
 
 /**
  * Notifications Controller
@@ -115,6 +116,16 @@ class ApiNotificationsController extends ApiController
         $this->ApiNotification->create();
         if ($this->ApiNotification->save($data))
         {
+          $condition = array('conditions' => array('Website.' . $this->Website->primaryKey => $data['website_id']));
+          $website   = $this->Website->find('first', $condition);
+
+          // 受信側の管理者に送信通知を行う
+          $email = new CakeEmail();
+          $email->from('hoge@fuga.com');
+          $email->to($website['Website']['email']);
+          $email->subject('testtest');
+          $email->send('本文');
+
           CakeLog::write('debug', 'ADD OK. website_id: '.$data['website_id']);
           $this->success(array('status' => 'OK'));
         }

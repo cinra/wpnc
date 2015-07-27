@@ -103,6 +103,22 @@ class WebsitesController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
+    public function order() {
+        $this->set('websites', $this->Website->find('all', array('order' => array('sort_no ASC'))));
+        if ($this->request->is('post')) {
+            $website_ids = explode(',', $this->request->data['website_ids']);
+            $sort_no = 0;
+            foreach ($website_ids as $website_id) {
+                $this->Website->read(null, $website_id);
+                $this->Website->set('sort_no', $sort_no);
+                $this->Website->save();
+                $sort_no++;
+            }
+            $this->Session->setFlash('Order Saved!');
+            return $this->redirect(array('action' => 'order'));
+        }
+    }
+
 /**
  * admin_index method
  *

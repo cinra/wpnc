@@ -23,7 +23,7 @@ class ApiWebsitesController extends ApiController {
  * @return void
  */
 	public function index() {
-		$apiWebsites = $this->ApiWebsite->find('all');
+		$apiWebsites = $this->ApiWebsite->find('all', array('order' => array('sort_no ASC')));
 
 
 		foreach ($apiWebsites as $key => &$apiWebsite) {

@@ -104,15 +104,14 @@ class WebsitesController extends AppController {
 	}
 
     public function order() {
-        $this->set('websites', $this->Website->find('all', array('order' => array('sort_no ASC'))));
+        $this->set('websites', $this->Website->find('all', array('order' => array('sort_no DESC'))));
         if ($this->request->is('post')) {
             $website_ids = explode(',', $this->request->data['website_ids']);
-            $sort_no = 0;
+            $sort_no = count($website_ids);
             foreach ($website_ids as $website_id) {
                 $this->Website->read(null, $website_id);
-                $this->Website->set('sort_no', $sort_no);
+                $this->Website->set('sort_no', $sort_no--);
                 $this->Website->save();
-                $sort_no++;
             }
             $this->Session->setFlash('Order Saved!');
             return $this->redirect(array('action' => 'order'));

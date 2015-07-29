@@ -1,7 +1,7 @@
 <?php
 
 App::uses('ApiController', 'Controller');
-App::uses( 'CakeEmail', 'Network/Email');
+App::uses('CakeEmail', 'Network/Email');
 
 /**
  * Notifications Controller
@@ -123,31 +123,12 @@ class ApiNotificationsController extends ApiController
 
           // 受信側の管理者に送信通知を行う
           $email = new CakeEmail();
+          $email->template('notification');
+          $email->viewVars(array('notification' => $notification));
           $email->from('hoge@fuga.com');
           $email->to($notification['Website']['email']);
           $email->subject('【早稲田大学オフィシャルサイト】更新通知センターからの記事を受信しました');
-          $body = <<<EOT
-早稲田大学オフィシャルサイト更新通知センターから送信された、他サイトの更新内容を受信しました。
-
-■通知元サイト：{$notification['Org_Website']['name']}
-■タイトル：{$notification['Notification']['wp_post_title']}
-
-上記の投稿記事を作成・受信するには、サイト管理画面にログインして、投稿>投稿を受信ページをご覧下さい。
-記事を作成する場合はタイトル項目の「記事作成」をクリックして下さい。記事を作成せずに削除する場合にはタイトル項目の「削除」をクリックしてください。
-
-記事作成・受信レコード削除は一括操作も可能です。
-
-■ご注意■--------------------------------------
-このメールはご登録頂いたメールアドレス宛に自動送信されています。
-このメールアドレス宛にご返信を頂いても、ご回答は行なえません。
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-早稲田大学広報室広報課 71-2783
-WebリニューアルML: web-renew@list.waseda.jp
-━━━━━━━━━━━━━━━━━━━━━━━━
-EOT;
-
-          $email->send($body);
+          $email->send();
 
           CakeLog::write('debug', 'Send Mail to: '. $notification['Website']['email']);
           CakeLog::write('debug', 'ADD OK. website_id: '.$data['website_id']);

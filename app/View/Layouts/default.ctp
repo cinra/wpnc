@@ -97,6 +97,7 @@
                 <ul class="dropdown-menu">
                   <li><a tabindex="-1" href="Websites">サイト一覧</a></li>
                   <li><a tabindex="-1" href="Websites/add">サイト追加</a></li>
+                  <li><a tabindex="-1" href="Websites/order">サイト並び替え</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -130,6 +131,7 @@
       </div>
       <!--/.fluid-container-->
       <script src="vendors/jquery-1.9.1.min.js"></script>
+      <script src="vendors/jquery-ui/jquery-ui.min.js"></script>
       <script src="bootstrap/js/bootstrap.min.js"></script>
       <script src="assets/scripts.js"></script>
     </div>

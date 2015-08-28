@@ -125,9 +125,9 @@ class ApiNotificationsController extends ApiController
           $email = new CakeEmail();
           $email->template('notification');
           $email->viewVars(array('notification' => $notification));
-          $email->from('hoge@fuga.com');
+          $email->from('web-renew@list.waseda.jp');
           $email->to($notification['Website']['email']);
-          $email->subject('【早稲田大学オフィシャルサイト】更新通知センターからの記事を受信しました');
+          $email->subject('Webシステムからのお知らせ：他箇所から記事を受信しました');
           $email->send();
 
           CakeLog::write('debug', 'Send Mail to: '. $notification['Website']['email']);

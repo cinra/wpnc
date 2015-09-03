@@ -1,6 +1,7 @@
 <?php
 
 App::uses('ApiController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 
 /**
  * Notifications Controller
@@ -113,8 +114,23 @@ class ApiNotificationsController extends ApiController
       if (count($apiNotification) < 1)
       {
         $this->ApiNotification->create();
-        if ($this->ApiNotification->save($data))
+        if ($apiNotification = $this->ApiNotification->save($data))
         {
+          $this->loadModel('Notification');
+          $notificationId = $apiNotification['notifications']['id'];
+          $options        = array('conditions' => array('Notification.' . $this->Notification->primaryKey => $notificationId));
+          $notification   = $this->Notification->find('first', $options);
+
+          // 受信側の管理者に送信通知を行う
+          $email = new CakeEmail();
+          $email->template('notification');
+          $email->viewVars(array('notification' => $notification));
+          $email->from('web-renew@list.waseda.jp');
+          $email->to($notification['Website']['email']);
+          $email->subject('Webシステムからのお知らせ：他箇所から記事を受信しました');
+          $email->send();
+
+          CakeLog::write('debug', 'Send Mail to: '. $notification['Website']['email']);
           CakeLog::write('debug', 'ADD OK. website_id: '.$data['website_id']);
           $this->success(array('status' => 'OK'));
         }

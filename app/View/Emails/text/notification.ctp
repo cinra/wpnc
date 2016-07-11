@@ -2,6 +2,7 @@
 
 通知元サイト：<?php echo $notification['Org_Website']['name'] . "\n"; ?>
 タイトル：<?php echo $notification['Notification']['wp_post_title'] . "\n"; ?>
+通知先サイト：<?php echo $notification['Website']['name'] . "\n"; ?>
 
 記事の詳細は、サイト管理画面にログインして、「投稿」>「投稿を受信」からご確認ください。
 記事を承認し、自箇所の投稿として作成する場合は、タイトル項目にマウスをホバーし「記事作成」をクリックして下さい。

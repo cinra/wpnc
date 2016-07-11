@@ -3,10 +3,10 @@
 /*
   from: http://be-hase.com/php/478/
 */
- 
+
 App::uses('AppController', 'Controller');
 App::uses('AuthComponent', 'Controller/Component');
- 
+
 class ApiController extends Controller
 {
   //CakeのJsonViewとXmlViewを使用するので、RequestHandler必須。
@@ -25,10 +25,10 @@ class ApiController extends Controller
 
   // JSONやXMLにして返す値を格納するための配列です。
   protected $result = array();
- 
+
   public function beforeFilter()
   {
-    
+
     parent::beforeFilter();
     // AuthComponent::$sessionKey = false;
     // $this->Auth->login();
@@ -54,9 +54,9 @@ class ApiController extends Controller
 
     // nosniffつけるべし。じゃないとIEでXSS起きる可能性あり。
     $this->response->header('X-Content-Type-Options', 'nosniff');
-    
+
   }
- 
+
   public function beforeRender()
   {
     // jsonp対応。JsonpViewクラスを自作(後述)
@@ -65,7 +65,7 @@ class ApiController extends Controller
       $this->viewClass = 'Jsonp';
     }
   }
- 
+
   // 成功系処理。$this->resultに値いれる
   protected function success($response = array())
   {
@@ -75,7 +75,7 @@ class ApiController extends Controller
     $this->set('response', $this->result['response']);
     $this->set('_serialize', array('meta', 'response'));
   }
- 
+
   // エラー系処理。$this->resultに値いれる
   protected function error($message = '', $code)
   {
@@ -88,7 +88,7 @@ class ApiController extends Controller
     $this->set('error', $this->result['error']);
     $this->set('_serialize', array('meta', 'error'));
   }
- 
+
   // バリデーションエラー系処理。$this->resultに値いれる
   protected function validationError($modelName, $validationError = array())
   {
@@ -117,17 +117,17 @@ class ApiController extends Controller
   // SEE: http://deadlytechnology.com/php/api-cakephp-app/
   private function authApi($apiKey = null)
   {
-    
+
     if ($apiKey == null) return false;
-    
+
     $this->loadModel('Website');
     $model_website = new Website();
-    
+
     $website = $model_website->find('first', array(
-      'conditions'=>array('Website.api_key'=>$apiKey),
-      'contain'=>false
+      'conditions' => array( 'Website.api_key' => $apiKey ),
+      'contain' => false
     ));
-    
+
     if (isset($website['Website']['id']))
     {
       $this->api_website_id = $website['Website']['id'];

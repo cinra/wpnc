@@ -3,7 +3,7 @@
 通知元サイト：<?php echo $notification['Org_Website']['name'] . "\n"; ?>
 タイトル：<?php echo $notification['Notification']['wp_post_title'] . "\n"; ?>
 
-> 元記事URL：<?php echo $notification['Org_Website']['url'] . "?p=" . $notification['Notification']['wp_postid'] . "\n"; ?>
+元記事URL：<?php echo $notification['Org_Website']['url'] . "?p=" . $notification['Notification']['wp_postid'] . "\n"; ?>
 
 通知先サイト：<?php echo $notification['Website']['name'] . "\n"; ?>
 
